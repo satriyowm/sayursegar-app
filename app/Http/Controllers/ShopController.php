@@ -16,7 +16,8 @@ class ShopController extends Controller
         return view('frontend.shop.index', compact('cartTotal', 'cartCount'));
     }
 
-    public function getProducts(Request $request,$slug = null){
+    public function getProducts(Request $request, $slug = null)
+    {
 
         $sorting = $request->sortingBy;
 
@@ -40,25 +41,23 @@ class ShopController extends Controller
 
         $products = Product::with('category');
 
-        if(!is_null($slug)){
+        if (!is_null($slug)) {
             $category = Category::whereSlug($slug)->firstOrFail();
-            
-            
+
+
             if (is_null($category->category_id)) {
-        
+
                 $categoriesIds = Category::whereCategoryId($category->id)->pluck('id')->toArray();
                 $categoriesIds[] = $category->id;
                 $products = $products->whereHas('category', function ($query) use ($categoriesIds) {
                     $query->whereIn('id', $categoriesIds);
-                });               
-
+                });
             } else {
                 $products = $products->whereHas('category', function ($query) use ($slug) {
                     $query->where([
                         'slug' => $slug,
                     ]);
                 });
-
             }
         }
 
@@ -68,7 +67,6 @@ class ShopController extends Controller
             'message' => 'Success',
             'products' => $products
         ]);
-
     }
 
     public function tag(Request $request, $slug)
@@ -94,14 +92,14 @@ class ShopController extends Controller
 
         $products = Product::with('tags');
 
-        $products = $products->whereHas('tags', function ($query) use($slug) {
+        $products = $products->whereHas('tags', function ($query) use ($slug) {
             $query->where([
                 'slug' => $slug,
             ]);
         })
-        ->orderBy($sortField, $sortType)
-        ->paginate(6);
+            ->orderBy($sortField, $sortType)
+            ->paginate(6);
 
-        return view('frontend.shop.index', compact('products','slug'));
+        return view('frontend.shop.index', compact('products', 'slug'));
     }
 }

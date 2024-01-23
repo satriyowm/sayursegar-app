@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Dashboard</title>
+    <title>Admin - Dashboard</title>
 
     <!-- Custom fonts for this template-->
     <link href="{{ asset('backend/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
@@ -28,7 +28,7 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-            @include('partials.sidebar')
+        @include('partials.sidebar')
         <!-- End of Sidebar -->
 
         <!-- Content Wrapper -->
@@ -63,7 +63,8 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" onclick="document.getElementById('logout-form').submit()" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" onclick="document.getElementById('logout-form').submit()"
+                                    href="#" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
@@ -82,30 +83,30 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                @if(session()->has('message'))
-                    <div class="alert alert-{{ session()->get('type') }} alert-dismissible fade show">
-                        {{ session()->get('message') }}
-                        <button type="button" class="close" data-dismiss="alert">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                @endif
+                    @if (session()->has('message'))
+                        <div class="alert alert-{{ session()->get('type') }} alert-dismissible fade show">
+                            {{ session()->get('message') }}
+                            <button type="button" class="close" data-dismiss="alert">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
 
-                @if($errors->any())
-                    <div class="alert alert-danger alert-dismissible fade show">
-                        <ul>
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
+                    @if ($errors->any())
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
 
-                        <button class="close" type="button" data-dismiss="alert">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                @endif
-            
-                   @yield('content')
+                            <button class="close" type="button" data-dismiss="alert">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
+
+                    @yield('content')
 
 
                 </div>

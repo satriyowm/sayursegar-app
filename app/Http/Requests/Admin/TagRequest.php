@@ -24,20 +24,19 @@ class TagRequest extends FormRequest
     public function rules()
     {
         switch ($this->method()) {
-            case 'POST':
-            {
-                return [
-                    'name' => ['required', 'max:255', 'unique:tags'],
-                ];
-            }
+            case 'POST': {
+                    return [
+                        'name' => ['required', 'max:255', 'unique:tags'],
+                    ];
+                }
             case 'PUT':
-            case 'PATCH':
-            {
-                return [
-                    'name' => ['required', 'max:255', 'unique:tags,name,'.$this->route()->tag->id],
-                ];
-            }
-            default: break;
+            case 'PATCH': {
+                    return [
+                        'name' => ['required', 'max:255', 'unique:tags,name,' . $this->route()->tag->id],
+                    ];
+                }
+            default:
+                break;
         }
     }
 }

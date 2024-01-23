@@ -10,9 +10,9 @@ use Midtrans\Config;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+	use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected $data = [];
+	protected $data = [];
 	protected $uploadsFolder = 'uploads/';
 
 	protected $rajaOngkirApiKey = null;
@@ -24,7 +24,7 @@ class Controller extends BaseController
 		'tiki' => 'Titipan Kilat'
 	];
 
-    protected $provinces = [];
+	protected $provinces = [];
 
 	/**
 	 * Create a new controller instance.
@@ -37,7 +37,7 @@ class Controller extends BaseController
 		$this->rajaOngkirBaseUrl = config('rajaongkir.base_url');
 		$this->rajaOngkirOrigin = config('rajaongkir.origin');
 	}
-    /**
+	/**
 	 * Raja Ongkir Request (Shipping Cost Calculation)
 	 *
 	 * @param string $resource resource url
@@ -59,16 +59,16 @@ class Controller extends BaseController
 		if ($params && $method == 'POST') {
 			$requestParams['form_params'] = $params;
 		} else if ($params && $method == 'GET') {
-			$query = is_array($params) ? '?'.http_build_query($params) : '';
+			$query = is_array($params) ? '?' . http_build_query($params) : '';
 			$url = $this->rajaOngkirBaseUrl . $resource . $query;
 		}
-		
+
 		$response = $client->request($method, $url, $requestParams);
 
 		return json_decode($response->getBody(), true);
-    }
-    
-    /**
+	}
+
+	/**
 	 * Get provinces
 	 *
 	 * @return array
@@ -76,7 +76,7 @@ class Controller extends BaseController
 	protected function getProvinces()
 	{
 		$provinceFile = 'provinces.txt';
-		$provinceFilePath = $this->uploadsFolder. 'files/' . $provinceFile;
+		$provinceFilePath = $this->uploadsFolder . 'files/' . $provinceFile;
 
 		$isExistProvinceJson = \Storage::disk('local')->exists($provinceFilePath);
 
@@ -93,13 +93,13 @@ class Controller extends BaseController
 				$provinces[$province['province_id']] = strtoupper($province['province']);
 			}
 		}
-		
-        return response()->json([
-            'status' => 200,
-            'provinces' => $provinces,
-        ]);
+
+		return response()->json([
+			'status' => 200,
+			'provinces' => $provinces,
+		]);
 	}
-	
+
 	/**
 	 * Get cities by province ID
 	 *
@@ -109,8 +109,8 @@ class Controller extends BaseController
 	 */
 	protected function getCities($provinceId)
 	{
-		$cityFile = 'cities_at_'. $provinceId .'.txt';
-		$cityFilePath = $this->uploadsFolder. 'files/' .$cityFile;
+		$cityFile = 'cities_at_' . $provinceId . '.txt';
+		$cityFilePath = $this->uploadsFolder . 'files/' . $cityFile;
 
 		$isExistCitiesJson = \Storage::disk('local')->exists($cityFilePath);
 
@@ -120,14 +120,14 @@ class Controller extends BaseController
 		}
 
 		$cityList = unserialize(\Storage::get($cityFilePath));
-		
+
 		$cities = [];
 		if (!empty($cityList)) {
 			foreach ($cityList as $city) {
-				$cities[$city['city_id']] = strtoupper($city['type'].' '.$city['city_name']);
+				$cities[$city['city_id']] = strtoupper($city['type'] . ' ' . $city['city_name']);
 			}
 		}
-		
+
 		return $cities;
 	}
 
@@ -142,14 +142,14 @@ class Controller extends BaseController
 		$results = [];
 		foreach ($this->couriers as $code => $courier) {
 			$params['courier'] = $code;
-			
-            $response = $this->rajaOngkirRequest('cost', $params, 'POST');
-			
+
+			$response = $this->rajaOngkirRequest('cost', $params, 'POST');
+
 			if (!empty($response['rajaongkir']['results'])) {
 				foreach ($response['rajaongkir']['results'] as $cost) {
 					if (!empty($cost['costs'])) {
 						foreach ($cost['costs'] as $costDetail) {
-							$serviceName = strtoupper($cost['code']) .' - '. $costDetail['service'];
+							$serviceName = strtoupper($cost['code']) . ' - ' . $costDetail['service'];
 							$costAmount = $costDetail['cost'][0]['value'];
 							$etd = $costDetail['cost'][0]['etd'];
 
@@ -173,7 +173,7 @@ class Controller extends BaseController
 			'weight' => $weight,
 			'results' => $results,
 		];
-		
+
 		return $response;
 	}
 

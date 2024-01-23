@@ -74,16 +74,16 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(CategoryRequest $request,Category $category)
+    public function update(CategoryRequest $request, Category $category)
     {
         $category->update($request->validated());
 
-        if($request->input('photo', false)){
-            if(!$category->photo || $request->input('photo') !== $category->photo->file_name){
+        if ($request->input('photo', false)) {
+            if (!$category->photo || $request->input('photo') !== $category->photo->file_name) {
                 isset($category->photo) ? $category->photo->delete() : null;
                 $category->addMedia(storage_path('tmp/uploads/') . $request->input('photo'))->toMediaCollection('photo');
             }
-        }else if($category->photo){
+        } else if ($category->photo) {
             $category->photo->delete();
         }
 

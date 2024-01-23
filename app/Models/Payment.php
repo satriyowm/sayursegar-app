@@ -7,18 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
-    protected $guarded = [];
+	protected $guarded = [];
 
-    public const PAYMENT_CHANNELS = ['credit_card', 'mandiri_clickpay', 'cimb_clicks',
-	'bca_klikbca', 'bca_klikpay', 'bri_epay', 'echannel', 'permata_va',
-	'bca_va', 'bni_va', 'other_va', 'gopay', 'indomaret',
-	'danamon_online', 'akulaku'];
+	public const PAYMENT_CHANNELS = [
+		'credit_card', 'mandiri_clickpay', 'cimb_clicks',
+		'bca_klikbca', 'bca_klikpay', 'bri_epay', 'echannel', 'permata_va',
+		'bca_va', 'bni_va', 'other_va', 'gopay', 'indomaret',
+		'danamon_online', 'akulaku'
+	];
 
 	public const EXPIRY_DURATION = 1;
 	public const EXPIRY_UNIT = 'days';
-	  
+
 
 	public const CHALLENGE = 'challenge';
 	public const SUCCESS = 'success';
@@ -35,12 +37,12 @@ class Payment extends Model
 	{
 		$integer = intval($integer);
 		$result = '';
-		
+
 		// Create a lookup array that contains all of the Roman numerals.
 		$lookup = ['M' => 1000, 'CM' => 900, 'D' => 500, 'CD' => 400, 'C' => 100, 'XC' => 90, 'L' => 50, 'XL' => 40, 'X' => 10, 'IX' => 9, 'V' => 5, 'IV' => 4, 'I' => 1];
- 
+
 		foreach ($lookup as $roman => $value) {
-			$matches = intval($integer/$value);
+			$matches = intval($integer / $value);
 			$result .= str_repeat($roman, $matches);
 			$integer = $integer % $value;
 		}
@@ -50,19 +52,19 @@ class Payment extends Model
 
 	public static function generateCode()
 	{
-		$dateCode = self::PAYMENTCODE . '/' . date('Ymd') . '/' . self::integerToRoman(date('m')). '/' . self::integerToRoman(date('d')). '/';
+		$dateCode = self::PAYMENTCODE . '/' . date('Ymd') . '/' . self::integerToRoman(date('m')) . '/' . self::integerToRoman(date('d')) . '/';
 
 		$lastOrder = self::select([\DB::raw('MAX(payments.number) AS last_code')])
 			->where('number', 'like', $dateCode . '%')
 			->first();
 
 		$lastOrderCode = !empty($lastOrder) ? $lastOrder['last_code'] : null;
-		
+
 		$orderCode = $dateCode . '00001';
 		if ($lastOrderCode) {
 			$lastOrderNumber = str_replace($dateCode, '', $lastOrderCode);
 			$nextOrderNumber = sprintf('%05d', (int)$lastOrderNumber + 1);
-			
+
 			$orderCode = $dateCode . $nextOrderNumber;
 		}
 
@@ -76,5 +78,5 @@ class Payment extends Model
 	private static function _isOrderCodeExists($orderCode)
 	{
 		return Order::where('code', '=', $orderCode)->exists();
-    }
+	}
 }

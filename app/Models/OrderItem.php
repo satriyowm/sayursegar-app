@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderItem extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
-    protected $guarded = [];
+	protected $guarded = [];
 
-     /**
+	/**
 	 * Define relationship with the Product
 	 *
 	 * @return void

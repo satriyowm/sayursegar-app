@@ -24,22 +24,21 @@ class CategoryRequest extends FormRequest
     public function rules()
     {
         switch ($this->method()) {
-            case 'POST':
-            {
-                return [
-                    'name' => ['required', 'max:255', 'unique:categories'],
-                    'category_id' => ['nullable'],
-                ];
-            }
+            case 'POST': {
+                    return [
+                        'name' => ['required', 'max:255', 'unique:categories'],
+                        'category_id' => ['nullable'],
+                    ];
+                }
             case 'PUT':
-            case 'PATCH':
-            {
-                return [
-                    'name' => ['required', 'max:255', 'unique:categories,name,'.$this->route()->category->id],
-                    'category_id' => ['nullable'],
-                ];
-            }
-            default: break;
+            case 'PATCH': {
+                    return [
+                        'name' => ['required', 'max:255', 'unique:categories,name,' . $this->route()->category->id],
+                        'category_id' => ['nullable'],
+                    ];
+                }
+            default:
+                break;
         }
     }
 }

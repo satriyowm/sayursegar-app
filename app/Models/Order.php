@@ -8,13 +8,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
-    use HasFactory;
+	use HasFactory;
 
-    protected $guarded = [];
+	protected $guarded = [];
 
-    public const ORDERCODE = 'INV';
+	public const ORDERCODE = 'INV';
 
-    public const PAID = 'paid';
+	public const PAID = 'paid';
 	public const UNPAID = 'unpaid';
 
 	public const CREATED = 'created';
@@ -33,26 +33,26 @@ class Order extends Model
 
 
 
-    /**
+	/**
 	 * Generate order code
 	 *
 	 * @return string
 	 */
 	public static function generateCode()
 	{
-		$dateCode = self::ORDERCODE . '/' . date('Ymd') . '/' . General::integerToRoman(date('m')). '/' . General::integerToRoman(date('d')). '/';
+		$dateCode = self::ORDERCODE . '/' . date('Ymd') . '/' . General::integerToRoman(date('m')) . '/' . General::integerToRoman(date('d')) . '/';
 
 		$lastOrder = self::select([\DB::raw('MAX(orders.code) AS last_code')])
 			->where('code', 'like', $dateCode . '%')
 			->first();
 
 		$lastOrderCode = !empty($lastOrder) ? $lastOrder['last_code'] : null;
-		
+
 		$orderCode = $dateCode . '00001';
 		if ($lastOrderCode) {
 			$lastOrderNumber = str_replace($dateCode, '', $lastOrderCode);
 			$nextOrderNumber = sprintf('%05d', (int)$lastOrderNumber + 1);
-			
+
 			$orderCode = $dateCode . $nextOrderNumber;
 		}
 
@@ -61,9 +61,9 @@ class Order extends Model
 		}
 
 		return $orderCode;
-    }
-    
-    /**
+	}
+
+	/**
 	 * Check if the generated order code is exists
 	 *
 	 * @param string $orderCode order code
@@ -73,14 +73,15 @@ class Order extends Model
 	private static function _isOrderCodeExists($orderCode)
 	{
 		return Order::where('code', '=', $orderCode)->exists();
-    }
-    
-    public function orderItems()
+	}
+
+	public function orderItems()
 	{
 		return $this->hasMany(OrderItem::class);
-    }
+	}
 
-	public function shipment(){
+	public function shipment()
+	{
 		return $this->hasOne(Shipment::class);
 	}
 
@@ -104,7 +105,8 @@ class Order extends Model
 		return $this->status == self::DELIVERED;
 	}
 
-	public function isCancelled(){
-		return $this->status == self::CANCELLED ;
+	public function isCancelled()
+	{
+		return $this->status == self::CANCELLED;
 	}
 }

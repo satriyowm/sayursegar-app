@@ -23,7 +23,7 @@ class ProductRequest extends FormRequest
      */
     public function rules()
     {
-        switch($this->method()){
+        switch ($this->method()) {
             case "POST":
                 return [
                     'name' => ['required'],
@@ -47,7 +47,8 @@ class ProductRequest extends FormRequest
                     'details' => ['required'],
                     'tags' => ['required'],
                 ];
-            default: break;      
+            default:
+                break;
         }
     }
 }

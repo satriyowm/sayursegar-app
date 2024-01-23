@@ -35,17 +35,17 @@ class CartController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request,$sessionKey = null)
+    public function store(Request $request, $sessionKey = null)
     {
         $product = Product::findOrFail($request->productId);
 
-		$item = [
-			'id' => md5($product->id),
-			'name' => $product->name,
-			'price' => $product->price,
-			'quantity' => isset($request->quantity) ? $request->quantity : 1,
-			'associatedModel' => $product,
-		];
+        $item = [
+            'id' => md5($product->id),
+            'name' => $product->name,
+            'price' => $product->price,
+            'quantity' => isset($request->quantity) ? $request->quantity : 1,
+            'associatedModel' => $product,
+        ];
 
         if ($sessionKey) {
             \Cart::add($item);
@@ -53,15 +53,13 @@ class CartController extends Controller
                 'status' => 200,
                 'message' => 'Successfully Added to Cart !',
             ]);
-        }else {
+        } else {
             $carts = \Cart::add($item);
             return response()->json([
                 'status' => 200,
                 'message' => 'Successfully Added to Cart !',
             ]);
         }
-        
-		
     }
 
     /**
@@ -102,7 +100,7 @@ class CartController extends Controller
      */
     public function update(Request $request, $cart_id)
     {
-        $cartUpdate = \Cart::update($cart_id,[
+        $cartUpdate = \Cart::update($cart_id, [
             'quantity' => [
                 'relative' => false,
                 'value' => $request->quantity,

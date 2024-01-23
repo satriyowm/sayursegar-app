@@ -16,8 +16,8 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if(!auth()->user()->is_admin){
-           return redirect('/');
+        if (!auth()->user()->is_admin) {
+            return redirect('/');
         }
         return $next($request);
     }

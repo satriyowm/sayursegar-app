@@ -34,7 +34,7 @@ class ProductController extends Controller
         $categories = Category::pluck('name', 'id');
         $tags = Tag::pluck('name', 'id');
 
-        return view('admin.products.create', compact('categories','tags'));
+        return view('admin.products.create', compact('categories', 'tags'));
     }
 
     /**
@@ -80,7 +80,7 @@ class ProductController extends Controller
         $categories = Category::pluck('name', 'id');
         $tags = Tag::pluck('name', 'id');
 
-        return view('admin.products.edit', compact('product','categories','tags'));
+        return view('admin.products.edit', compact('product', 'categories', 'tags'));
     }
 
     /**
@@ -90,7 +90,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ProductRequest $request,Product $product)
+    public function update(ProductRequest $request, Product $product)
     {
         $product->update($request->validated());
         $product->tags()->sync($request->input('tags', []));
